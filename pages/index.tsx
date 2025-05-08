@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react';
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.css' with { type: 'css' };
 
 import repositories from "../repositories.json";
 
@@ -46,7 +46,8 @@ async function getRandomRepository(
       }
     }
   );
-  const treeJSON = await treeResponse.json();
+  const treeJSON: { tree: { type: string, size: number, path: string }[] } =
+    await treeResponse.json();
   const files = treeJSON.tree.filter(
     (item) =>
       item.type === "blob" &&
