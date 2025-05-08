@@ -14,6 +14,8 @@ type RepositoryData = {
   downloadURL: string,
 }
 
+const forbiddenExts: string[] = ["png"];
+
 async function getRandomRepository(
   skip: string[],
 ): Promise<RepositoryData> {
@@ -46,7 +48,11 @@ async function getRandomRepository(
   );
   const treeJSON = await treeResponse.json();
   const files = treeJSON.tree.filter(
-    (item: { type: string; }) => item.type == 'blob');
+    (item) =>
+      item.type === "blob" &&
+      !forbiddenExts.some((f) => item.path.endsWith(f)) &&
+      item.size !== 0,
+  );
   const randomFile = files[Math.floor(Math.random() * files.length)];
 
   // Rarely (say, 1 in 100) we get an error here because `randomFile` is undefined.
